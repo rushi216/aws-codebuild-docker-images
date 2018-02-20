@@ -124,4 +124,8 @@ RUN mkdir warmup \
     && rm -rf warmup \
     && rm -rf /tmp/NuGetScratch
 
+RUN apt-get install -y build-essential \
+    && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+    && apt-get install -y nodejs
+
 ENTRYPOINT ["dockerd-entrypoint.sh"]
