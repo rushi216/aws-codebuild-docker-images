@@ -124,6 +124,7 @@ RUN mkdir warmup \
     && rm -rf warmup \
     && rm -rf /tmp/NuGetScratch
 
+# Install nodejs
 RUN apt-get install -y build-essential \
     && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
@@ -131,5 +132,22 @@ RUN apt-get install -y build-essential \
     && apt-get update \
     && apt-get install -y nodejs \
     && apt-get install -y yarn
+
+# Install mono
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
+    && echo "deb http://download.mono-project.com/repo/ubuntu stable-trusty main" | tee /etc/apt/sources.list.d/mono-official-stable.list \
+    && apt-get update && apt-get install -y mono-devel
+
+# Install JAVA
+RUN add-apt-repository ppa:webupd8team/java \
+    && echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections \
+    && apt-get update && apt-get install -y oracle-java8-installer
+
+# Install unzip
+RUN apt-get install -y unzip
+
+# Install sonar scanner
+RUN wget https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/4.0.2.892/sonar-scanner-msbuild-4.0.2.892.zip \
+    && unzip sonar-scanner-msbuild-4.0.2.892.zip -d /usr/local/bin
 
 ENTRYPOINT ["dockerd-entrypoint.sh"]
